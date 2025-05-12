@@ -29,7 +29,7 @@ python main.py
 
 # Executing a Request
 
-*replace with any agent name*
+*replace with any agent workflow name*
 
 ```sh
 curl -s -X POST http://127.0.0.1:9000/execute/gtm-agent
