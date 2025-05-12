@@ -1,0 +1,18 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from gram_agents import run_gtm_agent_workflow
+import uvicorn
+
+app = FastAPI()
+
+@app.post("/execute/{agent_name}")
+async def run_agent(agent_name: str):
+    match agent_name:
+        case "gtm-agent":
+            result = await run_gtm_agent_workflow()
+            return result
+        case _:
+            return {"error": f"Unknown agent: {agent_name}"}
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=9000, reload=True)
