@@ -4,8 +4,8 @@ An internal repository for building rough agentic workflow apps and exposing the
 
 # Dependencies
 
-- **GRAM_PROD_API_KEY**: get from [Gram Settings](https://app.getgram.ai/speakeasy-self/default/settings)
-- **OPENAI_API_KEY**: get from [OpenAI API Keys](https://platform.openai.com/settings/organization/api-keys)
+GRAM_PROD_API_KEY: https://app.getgram.ai/speakeasy-self/default/settings
+OPENAI_API_KEY: https://platform.openai.com/settings/organization/api-keys
 
 # Typescript
 
