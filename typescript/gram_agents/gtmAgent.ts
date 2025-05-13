@@ -51,7 +51,7 @@ export async function runGTMAgentWorkflow(): Promise<any> {
     console.log(companiesGeneration.text);
     messages.push(...companiesGeneration.response.messages);
 
-    const slackPrompt = "Post a message in the slack channel named proj-gram. Send information on all of these organizations, users, and companies in a message well formatted for slack using Slack's rich text formatting options.";
+    const slackPrompt = "Post a message to the slack channel with ID: C08H55TP4HZ (proj-gram), send information on all of these organizations, users, and companies in a message well formatted for slack using Slack's rich text formatting options.";
     messages.push({ role: 'user', content: slackPrompt });
     const slackGeneration = await generateText({
         model: openai('gpt-4o'),

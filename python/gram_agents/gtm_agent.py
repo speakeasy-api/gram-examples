@@ -43,7 +43,7 @@ async def run_gtm_agent_workflow():
     print(companies.final_output)
     slack = await Runner.run(
         agent,
-        "Post a message in the slack channel named proj-gram. Send information on all of these organizations, users, and companies in a message well formatted for slack using Slack's rich text formatting options.",
+        "Post a message to the slack channel with ID: C08H55TP4HZ (proj-gram). Send information on all of these organizations, users, and companies in a message well formatted for slack using Slack's rich text formatting options.",
         previous_response_id=companies.last_response_id,
     )
     print(slack.final_output)
