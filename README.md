@@ -34,3 +34,9 @@ python main.py
 ```sh
 curl -s -X POST http://127.0.0.1:9000/execute/gtm-agent
 ```
+
+```sh
+curl -s -X POST http://127.0.0.1:9000/execute/gtm-agent \
+  -H "Content-Type: application/json" \
+  -d '{"company": "speakeasy"}'
+```
