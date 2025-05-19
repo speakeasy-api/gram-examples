@@ -2,14 +2,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from gram_agents import run_gtm_agent_workflow
 import uvicorn
+from pydantic import BaseModel
 
 app = FastAPI()
 
+class AgentRequest(BaseModel):
+    company: str
+
 @app.post("/execute/{agent_name}")
-async def run_agent(agent_name: str):
+async def run_agent(agent_name: str, request: AgentRequest):
     match agent_name:
         case "gtm-agent":
-            result = await run_gtm_agent_workflow()
+            result = await run_gtm_agent_workflow(request.company)
             return result
         case _:
             return {"error": f"Unknown agent: {agent_name}"}
