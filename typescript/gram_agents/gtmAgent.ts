@@ -4,7 +4,7 @@ import { CoreMessage, generateText } from "ai";
 
 export async function runGTMAgentWorkflow(): Promise<any> {
   const key = process.env.GRAM_PROD_API_KEY ?? "";
-  const vercelAdapter = new VercelAdapter(key);
+  const vercelAdapter = new VercelAdapter({apiKey: key});
 
   const openai = createOpenAI({
     apiKey: process.env.OPENAI_API_KEY,

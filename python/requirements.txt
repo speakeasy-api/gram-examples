@@ -1,4 +1,4 @@
 openai-agents
-gram-ai==0.1.2
+gram-ai==0.2.4
 fastapi
 uvicorn[standard]
