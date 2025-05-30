@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from agents_sdk import run_gtm_agent_workflow
+from agents_sdk import run_gtm_agent_agents_sdk
+from langchain_sdk import run_gtm_agent_langchain
 import uvicorn
 from pydantic import BaseModel
 
