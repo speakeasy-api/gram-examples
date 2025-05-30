@@ -36,7 +36,9 @@ curl -s -X POST http://127.0.0.1:9000/execute/gtm-agent
 ```
 
 ```sh
-curl -s -X POST http://127.0.0.1:9000/execute/gtm-agent \
+curl -s -X POST http://127.0.0.1:9000/execute/gtm-agent/{framework} \
   -H "Content-Type: application/json" \
   -d '{"company": "speakeasy"}'
 ```
+
+LANGCHAIN JS HAS A BREAKING CHANGE TO TOO CALLING. USE 0.3.23 UNTIL THEY FIX IT

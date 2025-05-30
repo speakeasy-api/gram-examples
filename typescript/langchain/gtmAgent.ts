@@ -1,5 +1,5 @@
 import { LangchainAdapter } from "@gram-ai/sdk/langchain";
-import { BaseMessage, HumanMessage } from "@langchain/core/messages";
+import { BaseMessage, HumanMessage, AIMessage } from "@langchain/core/messages";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ChatOpenAI } from "@langchain/openai";
 import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
@@ -53,14 +53,16 @@ export async function runGTMAgent_LangChain(): Promise<any> {
   // Run the agent with the current messages
   const orgResult = await gtmExecutor.invoke({
     input: orgPrompt,
-    chatHistory,
+    chat_history: chatHistory, // Use chat_history instead of chatHistory
   });
 
-  // Store the messages in the chat history
-  chatHistory.push(new HumanMessage(orgPrompt));
-  chatHistory.push(orgResult.messages[orgResult.messages.length - 1]);
+  console.log(orgResult);
 
-  console.log(orgResult.messages[orgResult.messages.length - 1].content);
+  // Add messages to chat history
+  chatHistory.push(new HumanMessage(orgPrompt));
+  chatHistory.push(new AIMessage(orgResult.output)); // Use output instead of parsing messages
+
+  console.log(orgResult.output);
 
   // Second query - users
   const usersPrompt =
@@ -69,14 +71,14 @@ export async function runGTMAgent_LangChain(): Promise<any> {
   // Run the agent with the updated messages
   const usersResult = await gtmExecutor.invoke({
     input: usersPrompt,
-    chatHistory,
+    chat_history: chatHistory,
   });
 
-  // Store the messages in the chat history
+  // Add to chat history
   chatHistory.push(new HumanMessage(usersPrompt));
-  chatHistory.push(usersResult.messages[usersResult.messages.length - 1]);
+  chatHistory.push(new AIMessage(usersResult.output));
 
-  console.log(usersResult.messages[usersResult.messages.length - 1].content);
+  console.log(usersResult.output);
 
   // Third query - companies
   const companiesPrompt =
@@ -85,18 +87,14 @@ export async function runGTMAgent_LangChain(): Promise<any> {
   // Run the agent with the updated messages
   const companiesResult = await gtmExecutor.invoke({
     input: companiesPrompt,
-    chatHistory,
+    chat_history: chatHistory,
   });
 
-  // Store the messages in the chat history
+  // Add to chat history
   chatHistory.push(new HumanMessage(companiesPrompt));
-  chatHistory.push(
-    companiesResult.messages[companiesResult.messages.length - 1]
-  );
+  chatHistory.push(new AIMessage(companiesResult.output));
 
-  console.log(
-    companiesResult.messages[companiesResult.messages.length - 1].content
-  );
+  console.log(companiesResult.output);
 
   // Get slack tools and run slack query
   const slackTools = await langchainAdapter.tools({
@@ -105,32 +103,34 @@ export async function runGTMAgent_LangChain(): Promise<any> {
     environment: "default",
   });
 
-  const slackAgent = await createOpenAIFunctionsAgent({
+  // Create a new agent that combines both toolsets for context continuity
+  const combinedTools = [...gramTools, ...slackTools];
+  
+  const combinedAgent = await createOpenAIFunctionsAgent({
     llm,
-    tools: slackTools,
+    tools: combinedTools,
     prompt,
   });
 
-  const slackExecutor = new AgentExecutor({
-    agent: slackAgent,
-    tools: slackTools,
+  const combinedExecutor = new AgentExecutor({
+    agent: combinedAgent,
+    tools: combinedTools,
     verbose: false,
   });
 
   const slackPrompt =
     "Post a message to the slack channel with ID: C08H55TP4HZ (proj-gram), send information on all of these organizations, users, and companies in a message well formatted for slack using Slack's rich text formatting options.";
 
-  // Run the slack agent with all messages
-  const slackResult = await slackExecutor.invoke({
+  // Run with the full chat history
+  const slackResult = await combinedExecutor.invoke({
     input: slackPrompt,
-    chatHistory,
+    chat_history: chatHistory,
   });
 
-  console.log(slackResult.messages[slackResult.messages.length - 1].content);
+  console.log(slackResult.output);
 
   return {
-    content:
-      companiesResult.messages[companiesResult.messages.length - 1].content,
-    slack: slackResult.messages[slackResult.messages.length - 1].content,
+    content: companiesResult.output,
+    slack: slackResult.output,
   };
 }
