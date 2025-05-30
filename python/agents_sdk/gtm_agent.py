@@ -33,7 +33,7 @@ slackAgent = Agent(
 )
 
 
-async def run_gtm_agent_workflow(company: str):
+async def run_gtm_agent_agents_sdk(company: str):
     deals = await Runner.run(
         gtmAgent,
         f"The current date is {datetime.datetime.now().strftime('%Y-%m-%d')}. Please search forany deals for {company}. Render all available deal information.",

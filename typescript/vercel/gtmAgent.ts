@@ -2,7 +2,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { VercelAdapter } from "@gram-ai/sdk/vercel";
 import { CoreMessage, generateText } from "ai";
 
-export async function runGTMAgentWorkflow(): Promise<any> {
+export async function runGTMAgent_Vercel(): Promise<any> {
   const key = process.env.GRAM_PROD_API_KEY ?? "";
   const vercelAdapter = new VercelAdapter({apiKey: key});
 
